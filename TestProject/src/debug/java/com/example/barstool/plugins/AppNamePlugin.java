@@ -8,6 +8,8 @@ import dagger.ObjectGraph;
 
 import com.wmbest.barstool.Barstool;
 
+import com.example.barstool.BuildConfig;
+
 public class AppNamePlugin implements Barstool.Plugin {
     public String getTitle() {
         return "App Name";
@@ -18,6 +20,6 @@ public class AppNamePlugin implements Barstool.Plugin {
     }
 
     public void bindView(View aView, ObjectGraph aGraph) {
-        ((TextView) aView).setText("Bill's Awesome Test!");
+        ((TextView) aView).setText(BuildConfig.PACKAGE_NAME);
     }
 }
