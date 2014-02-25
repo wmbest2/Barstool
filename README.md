@@ -44,6 +44,7 @@ public class ThemePlugin implements Barstool.Plugin {
 Inject Plugin
 ----
 
+```java
 @Module(
     injects=MyActivity.class,
     includes=BarstoolModule.class
@@ -53,7 +54,7 @@ public class MyModule {
         return new ThemePlugin();
     }
 }
-
+```
 
 Load Barstool
 ----
