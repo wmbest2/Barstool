@@ -17,8 +17,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main_activity);
 
         if (BuildConfig.DEBUG) {
-            Barstool.setup(((CustomApp) getApplication()).getOG(), 
-                (DrawerLayout) findViewById(R.id.drawer));
+            Barstool.setup(((CustomApp) getApplication()).getOG(), this);
         }
     }
 }

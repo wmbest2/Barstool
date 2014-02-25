@@ -1,5 +1,6 @@
-package com.wmbest.barstool;
+package barstool;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Set;
+import java.lang.reflect.Field;
 
 import dagger.ObjectGraph;
 
@@ -17,8 +19,37 @@ import javax.inject.Inject;
 
 public class Barstool {
 
+    private static boolean isDebug(Context aContext) {
+        boolean result = false;
+        try {
+            Class<?> bc = aContext.getClassLoader().loadClass(aContext.getPackageName() + ".BuildConfig");
+            Field debug = bc.getDeclaredField("DEBUG");
+            result = debug.getBoolean(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static void setup(ObjectGraph aGraph, Activity aActivity) {
+        if (!isDebug(aActivity)) return;
+        ViewGroup root = (ViewGroup) aActivity.findViewById(android.R.id.content);
+        View w = root.getChildAt(0);
+        if (w == null) return;
+        if (!(w instanceof DrawerLayout)) {
+            DrawerLayout layout = new DrawerLayout(aActivity);
+            root.removeViewAt(0);
+            layout.addView(w);
+            w = layout;
+
+            root.addView(w, 0);
+        }
+        setup(aGraph, (DrawerLayout) w);
+    }
+
     public static void setup(ObjectGraph aGraph, DrawerLayout aViewRoot) {
         Context context = aViewRoot.getContext();
+        if (!isDebug(context)) return;
         LayoutInflater in = LayoutInflater.from(context);
         in.inflate(R.layout.barstool_list, aViewRoot, true);
         ListView aView = (ListView) aViewRoot.findViewById(R.id.right_drawer);

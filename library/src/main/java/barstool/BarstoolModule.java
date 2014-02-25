@@ -1,4 +1,4 @@
-package com.wmbest.barstool;
+package barstool;
 
 import dagger.Module;
 import dagger.Provides;

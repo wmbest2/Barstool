@@ -16,9 +16,10 @@ Usage
 Limitations
 ----
 
-Barstool takes a android.support.v4.widget.DrawerLayout as a parameter.
-This is to inject the Toolbar view and is a requirement I'd like to 
-remove but for now it is necessary.
+Barstool takes a android.support.v4.widget.DrawerLayout or will wrap an Activity.
+
+Barstool will only inject the drawer if BuildConfig.DEBUG == true
+
 
 Create Plugin
 ----
@@ -43,11 +44,21 @@ public class ThemePlugin implements Barstool.Plugin {
 Inject Plugin
 ----
 
+@Module(
+    injects=MyActivity.class,
+    includes=BarstoolModule.class
+)
+public class MyModule {
+    @Provides(type=SET) Barstool.Plugin getThemePlugin() {
+        return new ThemePlugin();
+    }
+}
+
+
 Load Barstool
 ----
 
 ```java
     ObjectGraph og = ((MyApp) getApplication()).getObjectGraph();
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
-    Barstool.setup(og, drawer); 
+    Barstool.setup(og, myActivity); 
 ```

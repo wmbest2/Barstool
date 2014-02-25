@@ -23,7 +23,7 @@ android {
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = "1.0.0"
+version = "1.0.1"
 group = "com.wmbest.barstool"
 
 def deployRepo = sonatypeRepo
@@ -53,16 +53,16 @@ uploadArchives {
         }
 
         pom.project {
-            artifactId 'swipeable-layout'
-            name 'Android Swipeable Layout Library'
+            artifactId 'barstool'
+            name 'Android Debug Toolbar'
             packaging 'aar'
-            description 'A auto-resizing swipeable layout'
-            url 'https://github.com/wmbest2/SwipeableLayout'
+            description 'A Pluggable Debug toolbar for Dagger\'s SET directive'
+            url 'https://github.com/wmbest2/Barstool'
 
             scm {
-                url 'scm:git@github.com:wmbest2/SwipeableLayout.git'
-                connection 'scm:git@github.com:wmbest2/SwipeableLayout.git'
-                developerConnection 'scm:git@github.com:wmbest2/SwipeableLayout.git'
+                url 'scm:git@github.com:wmbest2/Barstool.git'
+                connection 'scm:git@github.com:wmbest2/Barstool.git'
+                developerConnection 'scm:git@github.com:wmbest2/Barstool.git'
             }
 
             licenses {
