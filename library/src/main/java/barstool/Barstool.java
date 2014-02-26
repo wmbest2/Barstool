@@ -1,6 +1,7 @@
 package barstool;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -19,6 +20,10 @@ import javax.inject.Inject;
 
 public class Barstool {
 
+    private ObjectGraph mGraph;
+    private int mTitle = -1;
+    private int mBackground = -1;
+
     private static boolean isDebug(Context aContext) {
         boolean result = false;
         try {
@@ -31,45 +36,101 @@ public class Barstool {
         return result;
     }
 
-    public static void setup(ObjectGraph aGraph, Activity aActivity) {
-        setup(aGraph, aActivity, isDebug(aActivity));
+    public static Barstool empty() {
+        return new Barstool();        
     }
 
-    public static void setup(ObjectGraph aGraph, Activity aActivity, boolean aShow) {
+    public static Barstool with(ObjectGraph aGraph) {
+        return new Barstool(aGraph);
+    }
+
+    @Inject Barstool() {
+
+    }
+
+    private Barstool(ObjectGraph aGraph) {
+        mGraph = aGraph;
+    }
+
+    public Barstool titleAppearance(int aRes) {
+        mTitle = aRes;
+        return this;
+    }
+
+    public Barstool background(int aRes) {
+        mBackground = aRes;
+        return this;
+    }
+
+    public Barstool graph(ObjectGraph aGraph) {
+        mGraph = aGraph;
+        return this;
+    }
+
+    public ListView asListView(Context aContext) {
+        return build(aContext, null, false);
+    }
+
+    public Dialog asDialog() {
+        return null;
+    }
+
+    public void wrap(Activity aActivity) {
+        wrap(aActivity, isDebug(aActivity));
+    }
+
+    public void wrap(Activity aActivity, boolean aShow) {
         if (!aShow) return;
         ViewGroup root = (ViewGroup) aActivity.findViewById(android.R.id.content);
         View w = root.getChildAt(0);
-        setup(aGraph, w, true);
-    }
 
-    public static void setup(ObjectGraph aGraph, View aView) {
-        setup(aGraph, aView, isDebug(aView.getContext()));
-    }
-
-    public static void setup(ObjectGraph aGraph, View aView, boolean aShow) {
-        View w = aView;
-        Context context = w.getContext();
-
-        if (!aShow) return;
-        if (w == null) return;
-
-        if (!(w instanceof DrawerLayout) && (w.getParent() instanceof ViewGroup)) {
-            DrawerLayout layout = new DrawerLayout(context);
-            ViewGroup root = (ViewGroup) w.getParent();
+        if (!(w instanceof DrawerLayout)) {
+            DrawerLayout layout = new DrawerLayout(w.getContext());
             root.removeViewAt(0);
             layout.addView(w);
             w = layout;
-
             root.addView(w, 0);
-
-            LayoutInflater in = LayoutInflater.from(context);
-            in.inflate(R.layout.barstool_list, (ViewGroup) w, true);
-            ListView list = (ListView) w.findViewById(R.id.right_drawer);
-            list.setAdapter(new PluginAdapter(context, aGraph));
         }
+
+        into((DrawerLayout) w, aShow);
     }
-    
+
+    public void into(ViewGroup aView) {
+        into(aView, isDebug(aView.getContext()));
+    }
+
+    public void into(ViewGroup aView, boolean aShow) {
+        if (!aShow) return;
+        if (aView == null) return;
+
+        Context context = aView.getContext();
+        build(context, aView, true);
+    }
+
+    private ListView build(Context aContext, ViewGroup aRoot, boolean aAdd) {
+        if (mGraph == null)
+            throw new UnsupportedOperationException("You must call .graph(ObjectGraph) for barstool to work");
+        LayoutInflater in = LayoutInflater.from(aContext);
+
+        View aView = in.inflate(R.layout.barstool_list, aRoot, aAdd);
+        ListView list = (ListView) aView.findViewById(R.id.right_drawer);
+        
+        PluginAdapter pa = new PluginAdapter(aContext, mGraph);
+
+        if (mTitle != -1) {
+            pa.setTitleStyle(mTitle);
+        }
+
+        if (mBackground != -1) {
+            aRoot.setBackgroundResource(mBackground);
+        }
+
+        list.setAdapter(pa);
+        return list;
+    }
+
     public static class PluginAdapter extends ArrayAdapter<Plugin> {
+        int mTitleStyle = -1;
         ObjectGraph mGraph;
         LayoutInflater mInflater;
         @Inject public Set<Plugin> mPlugins;
@@ -83,12 +144,20 @@ public class Barstool {
             addAll(mPlugins.toArray(new Plugin[mPlugins.size()]));
         }
 
+        public void setTitleStyle(int aStyle) {
+            mTitleStyle = aStyle;
+        }
+
         public View getView(int aPos, View aConvert, ViewGroup aParent) {
             View aRoot = mInflater.inflate(R.layout.barstool_item, aParent, false);
             Plugin plugin = getItem(aPos);
 
             TextView title = (TextView) aRoot.findViewById(R.id.title);
             title.setText(plugin.getTitle());
+
+            if (mTitleStyle > 0) {
+                title.setTextAppearance(title.getContext(), mTitleStyle);
+            }
 
             View pluginView = plugin.getView(aRoot.getContext());
             plugin.bindView(pluginView, mGraph);
@@ -104,3 +173,4 @@ public class Barstool {
         public void bindView(View aView, ObjectGraph aObject);
     }
 }
+

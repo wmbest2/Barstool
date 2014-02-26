@@ -61,5 +61,26 @@ Load Barstool
 
 ```java
     ObjectGraph og = ((MyApp) getApplication()).getObjectGraph();
-    Barstool.setup(og, myActivity); 
+    Barstool.with(og).wrap(myActivity); 
 ```
+
+Need to make your life easier? 
+Inject a Barstool object!
+
+```java
+    // In @Module
+    @Provides Barstool provideBuilder() {
+        return Barstool.empty()
+            .titleAppearance(R.style.title_appearance)
+            .background(R.drawable.my_nine)
+    }
+
+    // In Activity
+
+    @Inject Barstool mBarstool
+
+    public void onCreate(Bundle aBundle) {
+        ...
+
+        mBarstool.graph(getOG()).wrap(this);
+    }
