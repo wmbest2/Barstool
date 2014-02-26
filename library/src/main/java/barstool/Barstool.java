@@ -32,28 +32,41 @@ public class Barstool {
     }
 
     public static void setup(ObjectGraph aGraph, Activity aActivity) {
-        if (!isDebug(aActivity)) return;
+        setup(aGraph, aActivity, isDebug(aActivity));
+    }
+
+    public static void setup(ObjectGraph aGraph, Activity aActivity, boolean aShow) {
+        if (!aShow) return;
         ViewGroup root = (ViewGroup) aActivity.findViewById(android.R.id.content);
         View w = root.getChildAt(0);
+        setup(aGraph, w, true);
+    }
+
+    public static void setup(ObjectGraph aGraph, View aView) {
+        setup(aGraph, aView, isDebug(aView.getContext()));
+    }
+
+    public static void setup(ObjectGraph aGraph, View aView, boolean aShow) {
+        View w = aView;
+        Context context = w.getContext();
+
+        if (!aShow) return;
         if (w == null) return;
-        if (!(w instanceof DrawerLayout)) {
-            DrawerLayout layout = new DrawerLayout(aActivity);
+
+        if (!(w instanceof DrawerLayout) && (w.getParent() instanceof ViewGroup)) {
+            DrawerLayout layout = new DrawerLayout(context);
+            ViewGroup root = (ViewGroup) w.getParent();
             root.removeViewAt(0);
             layout.addView(w);
             w = layout;
 
             root.addView(w, 0);
-        }
-        setup(aGraph, (DrawerLayout) w);
-    }
 
-    public static void setup(ObjectGraph aGraph, DrawerLayout aViewRoot) {
-        Context context = aViewRoot.getContext();
-        if (!isDebug(context)) return;
-        LayoutInflater in = LayoutInflater.from(context);
-        in.inflate(R.layout.barstool_list, aViewRoot, true);
-        ListView aView = (ListView) aViewRoot.findViewById(R.id.right_drawer);
-        aView.setAdapter(new PluginAdapter(context, aGraph));
+            LayoutInflater in = LayoutInflater.from(context);
+            in.inflate(R.layout.barstool_list, (ViewGroup) w, true);
+            ListView list = (ListView) w.findViewById(R.id.right_drawer);
+            list.setAdapter(new PluginAdapter(context, aGraph));
+        }
     }
     
     public static class PluginAdapter extends ArrayAdapter<Plugin> {
