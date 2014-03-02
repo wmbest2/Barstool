@@ -3,6 +3,8 @@ Barstool
 
 A pluggable debug toolbar for android using Square's Dagger library
 
+![example](http://i.imgur.com/YnbMe7ul.png)
+
 Inspiration
 ----
 
