@@ -3,6 +3,8 @@ Barstool
 
 A pluggable debug toolbar for android using Square's Dagger library
 
+![example](http://i.imgur.com/YnbMe7ul.png)
+
 Inspiration
 ----
 
@@ -52,7 +54,7 @@ public class MyModule {
 }
 ```
 
-For Injecting members using the current ObjectGraph see [here]("AdvancedPlugins.md")
+For Injecting members using the current ObjectGraph see [here](AdvancedPlugins.md)
 
 Load Barstool
 ----
