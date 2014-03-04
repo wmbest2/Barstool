@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<routes>
+    <route type="get" path="get/something.json">get/something.json</route>
+</routes>

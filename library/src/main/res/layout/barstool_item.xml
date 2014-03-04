@@ -10,7 +10,9 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="4dip"
         android:textSize="21sp"
         android:singleLine="true"
+        android:background="@drawable/default_header"
         />
 </LinearLayout>

@@ -23,19 +23,13 @@ android {
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = "1.1.0"
+version = "1.2.0"
 group = "com.wmbest.barstool"
 
 def deployRepo = sonatypeRepo
 
 /* Uncomment to deploy locally */
-deployRepo = 'file://localhost/tmp/myRepo'
-
-configurations {
-    archives {
-        extendsFrom configurations.default
-    }
-}
+// deployRepo = 'file://localhost/tmp/myRepo'
 
 signing {
     required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
@@ -67,8 +61,8 @@ uploadArchives {
 
             licenses {
                 license {
-                    name 'GNU General Public License (GPL), Version 2.0'
-                    url 'http://www.gnu.org/licenses/gpl2.txt'
+                    name 'Apache Version 2.0'
+                    url 'http://www.apache.org/licenses/'
                     distribution 'repo'
                 }
             }

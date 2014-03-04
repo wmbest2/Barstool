@@ -3,7 +3,10 @@ package barstool;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,15 +134,13 @@ public class Barstool {
 
     public static class PluginAdapter extends ArrayAdapter<Plugin> {
         int mTitleStyle = -1;
-        ObjectGraph mGraph;
         LayoutInflater mInflater;
         @Inject public Set<Plugin> mPlugins;
 
         public PluginAdapter(Context aContext, ObjectGraph aGraph) {
             super(aContext, -1);
             mInflater = LayoutInflater.from(aContext);
-            mGraph = aGraph;
-            mGraph.inject(this);
+            aGraph.inject(this);
 
             addAll(mPlugins.toArray(new Plugin[mPlugins.size()]));
         }
@@ -152,16 +153,25 @@ public class Barstool {
             View aRoot = mInflater.inflate(R.layout.barstool_item, aParent, false);
             Plugin plugin = getItem(aPos);
 
+
             TextView title = (TextView) aRoot.findViewById(R.id.title);
             title.setText(plugin.getTitle());
 
             if (mTitleStyle > 0) {
                 title.setTextAppearance(title.getContext(), mTitleStyle);
+
+                try {
+                    final int[] attrs = {android.R.attr.background,android.R.attr.padding};
+                    final TypedArray a = aParent.getContext().getTheme().obtainStyledAttributes(null, attrs, 0, mTitleStyle);
+                    title.setBackground(a.getDrawable(0));
+
+                    int padding = a.getDimensionPixelSize(1, -1);
+                    title.setPadding(padding, padding, padding, padding);
+                } catch (Exception e) {
+                }
             }
 
-            View pluginView = plugin.getView(aRoot.getContext());
-            plugin.bindView(pluginView, mGraph);
-
+            View pluginView = plugin.getView(aRoot.getContext(), (ViewGroup) aRoot);
             ((ViewGroup) aRoot).addView(pluginView);
             return aRoot;
         }
@@ -169,8 +179,7 @@ public class Barstool {
 
     public interface Plugin {
         public String getTitle();
-        public View getView(Context aContext);
-        public void bindView(View aView, ObjectGraph aObject);
+        public View getView(Context aContext, ViewGroup aRoot);
     }
 }
 

@@ -3,13 +3,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 apply plugin: 'android'
 
 repositories {
     mavenCentral()
+    maven {
+        url '/tmp/myRepo/' 
+    }
 }
 
 android {
@@ -26,6 +29,8 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.1'
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
     compile 'com.android.support:appcompat-v7:18.0.0'
-    compile project(':library')
+    compile 'com.mcxiaoke.volley:library:1.0.0'
+    compile 'com.vokal.volley:volleyball:1.0.0'
+    compile project(":library")
 }
 

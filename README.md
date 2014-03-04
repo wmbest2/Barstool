@@ -34,10 +34,6 @@ public class ThemePlugin implements Barstool.Plugin {
         LayoutInflater inflater = LayoutInflater.from(aContext);
         return infalter.inflate(R.layout.theme_picker, null);
     }
-
-    public void bindView(View aView, ObjectGraph aGraph) {
-        ...
-    }
 }
 ```
 
@@ -55,6 +51,8 @@ public class MyModule {
     }
 }
 ```
+
+For Injecting members using the current ObjectGraph see [here]("AdvancedPlugins.md")
 
 Load Barstool
 ----
@@ -84,3 +82,4 @@ Inject a Barstool object!
 
         mBarstool.graph(getOG()).wrap(this);
     }
+```

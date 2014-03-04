@@ -5,7 +5,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 
-import com.wmbest.barstool.Barstool;
+import javax.inject.Inject;
+
+import barstool.Barstool;
+
+import com.android.volley.RequestQueue;
+import com.vokal.volley.BaseUrl;
+import com.vokal.volley.VolleyBall.ServerChanger;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -16,8 +22,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(aBundle);
         setContentView(R.layout.main_activity);
 
-        if (BuildConfig.DEBUG) {
-            Barstool.setup(((CustomApp) getApplication()).getOG(), this);
-        }
+        ((CustomApp) getApplication()).getOG().inject(this);
+        Barstool.with(((CustomApp) getApplication()).getOG()).wrap(this);
     }
 }
