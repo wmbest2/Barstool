@@ -32,9 +32,9 @@ public class ThemePlugin implements Barstool.Plugin {
         return "Themes";
     }
 
-    public View getView(Context aContext) {
+    public View getView(Context aContext, ViewGroup aParent) {
         LayoutInflater inflater = LayoutInflater.from(aContext);
-        return infalter.inflate(R.layout.theme_picker, null);
+        return infalter.inflate(R.layout.theme_picker, aParent, false);
     }
 }
 ```
