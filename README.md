@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/wmbest2/barstool.png?label=ready&title=Ready)](https://waffle.io/wmbest2/barstool)
 Barstool
 ========
 
